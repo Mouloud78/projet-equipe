@@ -22,7 +22,7 @@
             <button class="signup-btn" type="submit" :disabled="loading">
                 {{ loading ? 'Connexion...' : 'Se Connecter' }}
             </button>
-            <p v-if="error" class="erreur">{{ error }}</p>
+            <p v-if="erreur" class="erreur">{{ erreur }}</p>
         </form>
     </div>
 </template>
@@ -33,12 +33,12 @@
 
   const courriel = ref('');
   const mot_de_passe = ref('');
-  const error = ref('');
+  const erreur = ref('');
   const loading = ref(false);
 
   async function connexion() {
     loading.value = true;
-    error.value = '';
+    erreur.value = '';
 
     try {
       await fetchCsrfToken();
@@ -50,11 +50,11 @@
     } catch (err) {
 
       if (err.response) {
-        error.value = 'Erreur de connexion';
+        erreur.value = 'Erreur de connexion';
       } else if (err.request) {
-        error.value = 'Impossible de joindre le serveur';
+        erreur.value = 'Impossible de joindre le serveur';
       } else {
-        error.value = 'Une erreur est survenue';
+        erreur.value = 'Une erreur est survenue';
       }
     } finally {
       loading.value = false;
