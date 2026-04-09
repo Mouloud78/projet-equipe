@@ -15,7 +15,12 @@
     </div>
 
     <div class="bouton-celleir">
-      <button class="btn btn-cellier"><Trash class="icons" /></button>
+      <button
+        class="btn btn-cellier"
+        @click="$emit('ouvrir-modale', cellier.id)"
+      >
+        <Trash class="icons" />
+      </button>
       <button class="btn btn-cellier"><PencilLine class="icons" /></button>
     </div>
   </div>
@@ -32,6 +37,6 @@ export default {
   props: {
     cellier: Object,
   },
-  return() {},
+  // return() {},
 };
 </script>
