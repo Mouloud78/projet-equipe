@@ -5,6 +5,10 @@ namespace App\Http\Controllers;
 use App\Models\CellierVin;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Auth;
+
+use App\Models\Cellier;
+
 
 class CellierVinController extends Controller
 {
@@ -20,15 +24,31 @@ class CellierVinController extends Controller
     ];
 
     /**
-     * Display a listing of the resource.
+     * Envoy le cellier avec les vins dans le cellier au frontend
+     * @param int $id du cellierVin dans la table
+     * @return json
      */
-    public function index()
+    public function index($id)
     {
-        //
+        // Va chercher dans la DB le cellier qui correspond a $id
+        $cellier = Cellier::with(['cellierVins.vin'])->find($id);
+
+        //Si trouve pas da cellier correspondant
+        if ($cellier == false) {
+            return response()->json([
+                'message' => "Le details de ce cellier n'est pas trouvé"
+            ], 404);
+        }
+
+        //retourne le cellier correspondant et les vins (incluant la quantite)
+        return response()->json([
+            'cellier' => $cellier,
+            'vins' => $cellier->cellierVins
+        ]);
     }
 
     /**
-     * Show the form for creating a new resource.
+     *
      */
     public function create()
     {
@@ -36,7 +56,7 @@ class CellierVinController extends Controller
     }
 
     /**
-     * Store a newly created resource in storage.
+     *
      */
     public function store(Request $request)
     {
@@ -66,7 +86,7 @@ class CellierVinController extends Controller
                 'quantite' => $request->quantite,
             ]);
 
-            // Retourner une réponse de succès 
+            // Retourner une réponse de succès
             return response()->json([
                 'message' => 'Bouteille ajouté dans le cellier avec succès',
                 'data' => $cellierVin
@@ -75,15 +95,52 @@ class CellierVinController extends Controller
     }
 
     /**
-     * Display the specified resource.
+     * La méthode affiche les détails d'une bouteill spécifique appartenant a l'usager connecté
+     * La méthode récupére une entrée de la table 'cellier_vins' en fonction de son id
+     * en incluant les relations avec le la table vin et la table cellier
+     * ELle vérifie également que la bouteille appartient bien a un cellier associé a l'uager actuellement
+     * connecté
+     * Elle retourne les informations détaillées de la bouteille sous forme de JSON
+     * @param int  $id de la boouteille dans le cellier
+     * @return JSON
+     *
      */
-    public function show(CellierVin $cellierVin)
+
+    public function show($id)
     {
-        //
+        $cellierVin = CellierVin::with(['vin', 'cellier'])
+            ->where('cellier_vins.id', $id)
+            ->whereHas('cellier', function ($query) {
+                $query->where('usager_id', Auth::id());
+            })
+            ->first();
+        if (!$cellierVin) {
+            return response()->json([
+                'error' => 'Bouteille non trouvée ou accès refusé'
+            ], 404);
+        }
+
+        return response()->json([
+            'id' => $cellierVin->id,
+            'cellier_id' => $cellierVin->cellier->id,
+            'nom' => $cellierVin->vin->nom,
+            'prix' => $cellierVin->vin->prix,
+            'pays' => $cellierVin->vin->pays,
+            'region' => $cellierVin->vin->region,
+            'format' => $cellierVin->vin->format,
+            'annee' => $cellierVin->vin->annee,
+            'image' => $cellierVin->vin->image_url,
+            'couleur' => $cellierVin->vin->couleur,
+            'quantite' => $cellierVin->quantite,
+            'cellier_nom' => $cellierVin->cellier->nom,
+            'cepage' => $cellierVin->vin->cepage,
+            'degre_alcool' => $cellierVin->vin->degre_alcool,
+            'taux_sucre' => $cellierVin->vin->taux_sucre,
+        ]);
     }
 
     /**
-     * Show the form for editing the specified resource.
+     *
      */
     public function edit($vin_id)
     {
@@ -91,7 +148,7 @@ class CellierVinController extends Controller
     }
 
     /**
-     * Update the specified resource in storage.
+     *
      */
     public function update(Request $request, $vin_id)
     {        
@@ -124,10 +181,12 @@ class CellierVinController extends Controller
     }
 
     /**
-     * Remove the specified resource from storage.
+     * Supprime un vin dans un cellier
+     * @param CellierVin id du cellierVin a supprimer
      */
     public function destroy(CellierVin $cellierVin)
     {
-        //
+        $cellierVin->delete();
+        return response()->json(['message' => 'Vin supprimé du cellier avec succès']);
     }
 }

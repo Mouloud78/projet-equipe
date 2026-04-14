@@ -8,6 +8,8 @@ import ProfilUsager from "../pages/usager/ProfilUsager.vue";
 import CreerCellier from "../pages/cellier/CreerCellier.vue";
 import ModifierCellier from "../pages/cellier/ModifierCellier.vue";
 import Dashboard from "../pages/cellier/Dashboard.vue";
+import DetailBouteille from "../pages/bouteille/DetailBouteille.vue";
+import DetailCellier from "../pages/cellierVin/DetailCellier.vue";
 import AjouterBouteille from "../pages/bouteille/AjouterBouteille.vue";
 
 const routes = [
@@ -54,10 +56,20 @@ const routes = [
     meta: { requiresAuth: true },
   },
   {
+    path: "/cellier-vin/:id",
+    component: DetailBouteille,
+  },
+  {
     path: "/bouteille/AjouterBouteille/:id",
     component: AjouterBouteille,
     meta: { requiresAuth: true },
   },
+  {
+    path: "/detail-cellier/:id",
+    component: DetailCellier,
+    meta: { requiresAuth: true },
+  },
+
   // redirige les URL non reconnu (dans notre code) pour /connexion-usager
   {
     path: "/:pathMatch(.*)*",
