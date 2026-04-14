@@ -1,12 +1,19 @@
 <template>
   <Navbar />
+  <div v-if="messageSucces" class="bloc-modale-succes">
+    {{ messageSucces }}
+  </div>
   <div>
     <form class="bloc-form" @submit.prevent="ajouterBouteille">
       <h1 class="profil-titre">Ajouter la bouteille au cellier</h1>
       <label>Nom du cellier </label>
-      <select class="form-input" v-model="cellierVin">
+      <select class="form-input" v-model="cellier_id">
         <option disabled value="">Choisir un cellier</option>
-        <option v-for="cellier in celliers" :key="cellier.id" :value="cellier">
+        <option
+          v-for="cellier in celliers"
+          :key="cellier.id"
+          :value="cellier.id"
+        >
           {{ cellier.nom }}
         </option>
       </select>
@@ -44,10 +51,15 @@ export default {
       vin: null,
       celliers: [],
       erreurs: {},
-      cellierVin: "",
+      cellier_id: "",
+      quantite: 0,
+      vin_id: 0,
+      message: "",
+      messageSucces: "",
     };
   },
   methods: {
+    // méthode pour récupérer les celliers de l'utilisateur
     async recupererCelliers() {
       try {
         const response = await api.get("/celliers");
@@ -56,7 +68,41 @@ export default {
         this.erreur = "Une erreur est survenue";
       }
     },
-    async ajouterBouteille() {},
+    // méthode pour ajouter une bouteille au cellier
+    async ajouterBouteille() {
+      try {
+        this.message = "";
+        this.erreurs = {};
+        this.messageSucces = "";
+
+        // récupérer l'id de la bouteille à partir de l'URL
+        this.vin_id = this.$route.params.id;
+
+        // envoyer la requête POST pour ajouter la bouteille au cellier
+        const response = await api.post("/ajouter-bouteille", {
+          cellier_id: this.cellier_id,
+          vin_id: this.vin_id,
+          quantite: this.quantite,
+        });
+
+        this.cellierVin = response.data;
+
+        // afficher un message de succès et rediriger vers le catalogue après 2 secondes
+        this.messageSucces =
+          "Votre bouteille a été ajoutée au cellier avec succès !";
+        setTimeout(() => {
+          this.messageSucces = "";
+          this.$router.push("/catalogue");
+        }, 2000);
+      } catch (erreur) {
+        if (erreur.response.data.errors) {
+          this.erreurs = erreur.response.data.errors;
+        }
+        if (erreur.response.data.message) {
+          this.message = erreur.response.data.message;
+        }
+      }
+    },
   },
   // récupérer les informations de la bouteille dès que le composant est monté
   mounted() {

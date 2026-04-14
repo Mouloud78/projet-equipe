@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CellierController;
 use App\Http\Controllers\UsagerController;
+use App\Http\Controllers\CellierVinController;
 
 /*
 |--------------------------------------------------------------------------
@@ -48,4 +49,6 @@ Route::middleware(['web', 'auth'])->group(function () {
     Route::put('/modifier-cellier/{id}', [CellierController::class, 'update']);
     Route::get('/celliers', [CellierController::class, 'index']);
     Route::delete('/supprimer-cellier/{cellier}', [CellierController::class, 'destroy']);
+    // Route pour gerer les bouteilles dans les celliers
+    Route::post('/ajouter-bouteille', [CellierVinController::class, 'store']);
 });
