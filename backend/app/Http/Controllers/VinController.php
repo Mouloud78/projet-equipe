@@ -12,6 +12,7 @@ class VinController extends Controller
      * Récupère les paramètres de pagination depuis la requête HTTP
      * page : numéro de la page actuelle (par défaut 1)
      * per_page : nombre de résultats par page (par défaut 12)
+     * Recupere le input de la recherche
      * Récupère les filtres envoyés dans la requête, ou tableau vide si aucun
      * Initialise une requête Eloquent sur le modèle Vin
      * Filtre par un champ spécifié
@@ -26,10 +27,6 @@ class VinController extends Controller
         $recherche = $request->get('recherche', '');
 
         $query = Vin::query();
-
-        if (empty($recherche) == false) {
-            $query->where('nom', 'like', "%{$recherche}%");
-        }
 
         $wines = $query->paginate($perPage, ['*'], 'page', $page);
 

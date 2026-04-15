@@ -5,21 +5,15 @@
       <h2 class="banniere-titre">Catalogue des vins</h2>
     </div>
 
-    <div class="barre-recherche">
+    <div class="search-container">
+      <Search class="search-icon" />
       <input
         type="text"
         v-model="termeDeRecherche"
         placeholder="Rechercher un vin par nom..."
         @input="rechercherVins"
-        class="champ-de-recherche"
+        class="search-input"
       />
-    </div>
-
-    <div class="resultats" v-if="!loading">
-      <p>
-        Résultats {{ debut }} - {{ fin }} sur {{ total }}
-        <span v-if="termeDeRecherche"> pour "{{ termeDeRecherche }}"</span>
-      </p>
     </div>
 
     <WineGrid v-if="!loading" :vins="vins" />
@@ -42,12 +36,14 @@ import { useWineStore } from "../stores/wineStore";
 import WineGrid from "../components/WineGrid.vue";
 import Navbar from "../components/Navbar.vue";
 import Pagination from "../components/Pagination.vue";
+import { Search } from "lucide-vue-next";
 
 export default {
   components: {
     WineGrid,
     Navbar,
     Pagination,
+    Search,
   },
 
   data() {
@@ -151,12 +147,13 @@ export default {
 
     async fetchWines() {
       const filters = {};
-      await this.wineStore.fetchAllWines(this.page, this.perPage, filters);
+      await this.wineStore.fetchAllWines(this.page, this.perPage, filters, this.termeDeRecherche);
     },
 
+    // pour la barre de recherche, va chercher tous les vins contenu dans cette recherche
     async rechercherVins() {
         const filters = {};
-        await this.wineStore.fetchAllWines(this.page, this.perPage, filters, this.termeDeRecherche);
+        await this.wineStore.fetchAllWines(0, this.perPage, filters, this.termeDeRecherche);
     },
 
     goToPage(p) {
