@@ -6,6 +6,7 @@ use App\Models\Cellier;
 use App\Models\Usager;
 use Illuminate\Http\Request;
 use App\Models\CellierVin;
+use App\Models\Vin;
 
 class CellierController extends Controller
 {
@@ -15,7 +16,6 @@ class CellierController extends Controller
     public function index(Request $request)
     {
         $celliers = Cellier::where('usager_id', $request->user()->id)->get();
-
         return response()->json([
             'data' => $celliers
         ]);
@@ -112,21 +112,138 @@ class CellierController extends Controller
     }
 
     /**
-     * Methode qui permet de charger les bouteilles des celliers de l'usager connecté
+     * Methode qui permet de récupérer toutes bouteilles 
+     * des celliers de l'usager connecté,
+     * avec possibilité de recherche et de filtres dynamiques
      *
      * @return void
      */
-    public function bouteillesUsager()
+    public function bouteillesUsager(Request $request)
     {
+        //Récupère l'usager actuellement connecté
         $usager = auth()->user();
 
-        $bouteilles = CellierVin::with(['vin', 'cellier'])
-            ->whereHas('cellier', function ($query) use ($usager) {
-                $query->where('usager_id', $usager->id);
-            })
-            ->get();
+        //Récupère les filtres envoyés ou un tableau vide par defaut
+        $filters = $request->get('filters', []);
+        $search = $request->get('recherche', '');
 
-        return response()->json($bouteilles);
+        //Construit la requete principale
+        $query = CellierVin::with(['vin', 'cellier'])
+            ->whereHas('cellier', function ($q) use ($usager) {
+                $q->where('usager_id', $usager->id);
+            });
+
+        //Filtrer par nom de vin
+        if (!empty($search)) {
+            $query->whereHas('vin', function ($q) use ($search) {
+                $q->where('nom', 'like', "%$search%");
+            });
+        }
+
+        //Filtrer par pays
+        if (!empty($filters['countries'])) {
+            $query->whereHas('vin', fn($q) => $q->whereIn('pays', $filters['countries']));
+        }
+
+        //Filtrer par region
+        if (!empty($filters['regions'])) {
+            $query->whereHas('vin', function ($q) use ($filters) {
+                foreach ($filters['regions'] as $region) {
+                    $q->orWhere('region', 'like', "%$region%");
+                }
+            });
+        }
+
+        //Filtrer par cepage
+        if (!empty($filters['cepages'])) {
+            $query->whereHas('vin', function ($q) use ($filters) {
+                foreach ($filters['cepages'] as $cepage) {
+                    $q->orWhere('cepage', 'like', "%$cepage%");
+                }
+            });
+        }
+
+        //Filtrer par prix
+        if (!empty($filters['prix'])) {
+            $min = min($filters['prix']);
+            $max = max($filters['prix']);
+
+            $query->whereHas(
+                'vin',
+                fn($q) =>
+                $q->whereBetween('prix', [$min, $max])
+            );
+        }
+
+        //Filtrer par format 
+        if (!empty($filters['formats'])) {
+            $query->whereHas(
+                'vin',
+                fn($q) =>
+                $q->whereIn('format', $filters['formats'])
+            );
+        }
+
+        //filtrer par degre alcool
+        if (!empty($filters['degres'])) {
+            $query->whereHas(
+                'vin',
+                fn($q) =>
+                $q->whereIn('degre_alcool', $filters['degres'])
+            );
+        }
+
+        //filtrer par millesimes
+        if (!empty($filters['millesimes'])) {
+            $query->whereHas(
+                'vin',
+                fn($q) =>
+                $q->whereIn('annee', $filters['millesimes'])
+            );
+        }
+
+
+        //filter par couleur
+        if (!empty($filters['couleur'])) {
+            $query->whereHas(
+                'vin',
+                fn($q) =>
+                $q->whereIn('couleur', $filters['couleur'])
+            );
+        }
+
+        //Exécution de la requête pour récupérer les bouteilles filtrées
+        $bouteilles = $query->get();
+
+        //Construction d'une requête pour récupérer tous les filtres disponibles
+        $vinQuery = Vin::whereHas('cellierVins', function ($q) use ($usager) {
+            $q->whereHas(
+                'cellier',
+                fn($q2) =>
+                $q2->where('usager_id', $usager->id)
+            );
+        });
+
+        //Génération des valeurs possibles pour chaque filtres qui doivent être distnct et non null
+        $toutLesFilters = [
+            'countries' => (clone $vinQuery)->distinct()->pluck('pays')->filter()->values(),
+            'regions' => (clone $vinQuery)->distinct()->pluck('region')->filter()->values(),
+            'cepages' => (clone $vinQuery)->distinct()->pluck('cepage')->filter()->values(),
+            'prix' => (clone $vinQuery)->distinct()->pluck('prix')->filter()->values(),
+            'formats' => (clone $vinQuery)->distinct()->pluck('format')->filter()->values(),
+            'degres' => (clone $vinQuery)->distinct()->pluck('degre_alcool')->filter()->values(),
+            'millesimes' => (clone $vinQuery)->distinct()->pluck('annee')->filter()->values(),
+            'couleur' => (clone $vinQuery)->distinct()->pluck('couleur')->filter()->values(),
+        ];
+
+        /**
+         * Retourn de la réponse sous forme JSON
+         * avec les bouteilles filtrées et les options de filtres disponibles
+         * */
+        return response()->json([
+            'data' => $bouteilles,
+            'filters' => $toutLesFilters
+        ]);
     }
 
     /**
