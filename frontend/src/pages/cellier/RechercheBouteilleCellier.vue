@@ -97,42 +97,58 @@
   />
 
   <div class="liste-bouteilles">
+
     <div
       v-for="bouteille in bouteilles"
       :key="bouteille.id"
-      class="carte-bouteille"
     >
-      <img :src="bouteille.vin.image_url" alt="vin" class="image-vin" />
 
-      <div class="info">
-        <h3>{{ bouteille.vin.nom }}</h3>
-        <p>Cellier : {{ bouteille.cellier.nom }}</p>
-        <p>Prix : {{ bouteille.vin.prix }}$</p>
-        <p>Quantité : {{ bouteille.quantite }}</p>
-        <button
-          @click="modifierQuantiteVin(bouteille.quantite - 1, bouteille.id)"
-          :disabled="bouteille.quantite <= 1"
-          class="btn-qte"
-        >
-          <CircleMinus />
-        </button>
-        <button @click="modifierQuantiteVin(bouteille.quantite + 1, bouteille.id)" class="btn-qte">
-          <CirclePlus />
-        </button>
+      <div v-if="bouteille.messageAjout" class="bloc-modale-succes">
+        {{bouteille.messageAjout }}
       </div>
 
-      <div class="bouton-cellier">
-      <button class="btn btn-cellier" @click="ouvrirModale(bouteille.id)">
-        <Trash class="icons" />
-      </button>
+      <div v-if="bouteille.messageErreur" class="erreur">
+        {{ bouteille.messageErreur }}
+      </div>
 
-      <button class="btn btn-cellier" @click="voirDetail(bouteille.id)">
-        <Eye class="icons" />
-      </button>
-    </div>
+      <div class="carte-bouteille">
 
+        <img :src="bouteille.vin.image_url" alt="vin" class="image-vin" />
+
+        <div class="info">
+          <h3>{{ bouteille.vin.nom }}</h3>
+          <p>Cellier : {{ bouteille.cellier.nom }}</p>
+          <p>Prix : {{ bouteille.vin.prix }}$</p>
+          <p>Quantité : {{ bouteille.quantite }}</p>
+          <button
+            @click="modifierQuantiteVin(bouteille.quantite - 1, bouteille.id)"
+            :disabled="bouteille.quantite <= 1"
+            class="btn-qte"
+          >
+            <CircleMinus />
+          </button>
+          <button @click="modifierQuantiteVin(bouteille.quantite + 1, bouteille.id)" class="btn-qte">
+            <CirclePlus />
+          </button>
+        </div>
+
+        <div class="bouton-cellier">
+        <button class="btn btn-cellier" @click="ouvrirModale(bouteille.id)">
+          <Trash class="icons" />
+        </button>
+
+        <button class="btn btn-cellier" @click="voirDetail(bouteille.id)">
+          <Eye class="icons" />
+        </button>
+
+        <button class="btn btn-cellier" @click="ajouterListeAchats(bouteille.id)">
+          <ShoppingBasket class="icons" />
+        </button>
+
+      </div>
     </div>
   </div>
+</div>
 
   <ModalConfirmation
     :show="afficherModale"
@@ -148,13 +164,14 @@
 
 <script>
 import Navbar from "../../components/Navbar.vue";
-import { Search, ListFilter, ArrowDownNarrowWide, Trash, Eye, CirclePlus, CircleMinus, } from "lucide-vue-next";
+import { Search, ListFilter, ArrowDownNarrowWide, Trash, Eye, CirclePlus, CircleMinus, ShoppingBasket, } from "lucide-vue-next";
 import FilterSection from "../../components/FilterSelection.vue";
 import ColorFilter from "../../components/ColorFilter.vue";
 import axios from "axios";
 import api, { fetchCsrfToken } from "../../api";
 import ModalConfirmation from "../../components/ModalConfirmation.vue";
 import ModalTri from "../../components/ModalTri.vue";
+import { useAuthStore } from "../../stores/auth";
 
 
 export default {
@@ -171,6 +188,7 @@ export default {
     CirclePlus,
     CircleMinus,
     ModalConfirmation,
+    ShoppingBasket,
   },
 
   data() {
@@ -217,6 +235,8 @@ export default {
       },
       afficherModale: false,
       idASupprimer: null,
+      messageSucces: "",
+      message: "",
     };
   },
 
@@ -345,6 +365,49 @@ export default {
     voirDetail(id) {
       this.$router.push(`/cellier-vin/${id}`);
     },
+
+    async ajouterListeAchats(idVin) {
+      try {
+
+        const bouteille = this.bouteilles.find(b => b.id === idVin);
+        if (bouteille) {
+          bouteille.messageAjout = null;
+        }
+
+        // Récupérer l'utilisateur connecté
+        const authStore = useAuthStore();
+        await authStore.fetchUsager();
+        const usagerId = authStore.usager.id;
+
+         // Récupérer l'id du vin
+        const vinId = idVin;
+
+        //appel api pour ajouter a la BD
+        const response = await api.post("/ajouter-bouteille-liste", {
+          usager_id: usagerId,
+          vin_id: vinId,
+        });
+
+        // afficher un message de succès
+        if (bouteille) {
+          bouteille.messageAjout =
+          "Votre bouteille a été ajoutée a la liste d'achat avec succès !";
+        setTimeout(() => {
+          bouteille.messageAjout = null;
+        }, 2000);
+      }
+      // afficher message d'erreur
+      } catch (erreur) {
+        const bouteille = this.bouteilles.find(b => b.id === idVin);
+
+        if (bouteille) {
+          bouteille.messageErreur = "La bouteille n'a pas pu etre ajouter a la liste d'achat, car elle en fait deja parti"
+          setTimeout(() => {
+            bouteille.messageErreur = null;
+          }, 3000);
+      }
+    }
+    }
   },
 
   mounted() {

@@ -152,6 +152,7 @@ body {
     justify-content: center;
   }
   .erreur {
+    margin: 5px;
     font-size: 16px;
   }
 }

@@ -44,8 +44,8 @@
       </div>
     </div>
 
-    <button class="liste-btn" @click="ajouterListeAchats">
-      <ShoppingBasket />
+    <button class="liste-btn btn btn-cellier" @click="ajouterListeAchats">
+      <ShoppingBasket class="icons" />
     </button>
 
     <button class="info-btn" @click.stop="toggleInfo">
