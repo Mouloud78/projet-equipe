@@ -107,6 +107,7 @@
       <div class="info">
         <h3>{{ bouteille.vin.nom }}</h3>
         <p>Cellier : {{ bouteille.cellier.nom }}</p>
+        <p>Prix : {{ bouteille.vin.prix }}$</p>
         <p>Quantité : {{ bouteille.quantite }}</p>
         <button
           @click="modifierQuantiteVin(bouteille.quantite - 1, bouteille.id)"
