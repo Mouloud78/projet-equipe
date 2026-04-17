@@ -5,23 +5,38 @@
       v-if="store.bouteilleVin"
       :bouteilleVin="store.bouteilleVin"
       :cellierNom="store.bouteilleVin.cellier_nom"
-      @supprimer-bouteille="supprimerBouteille"
+      @supprimer-bouteille="ouvrirModale"
       @modifier-bouteille="modifierBouteille"
+    />
+    <ModalConfirmation
+      :show="afficherModale"
+      message="Voulez-vous supprimer cette bouteille, la suppression est définitive ?"
+      confirmText="Supprimer"
+      cancelText="Annuler"
+      @confirm="supprimerBouteille"
+      @cancel="afficherModale.value = false"
     />
   </div>
 </template>
 
 <script setup>
 import { onMounted } from "vue";
+import { ref } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import { useCellierStore } from "../../stores/detailBouteille";
 import VinCarte from "../../components/VinCarte.vue";
+import ModalConfirmation from "../../components/ModalConfirmation.vue";
 import Navbar from "../../components/Navbar.vue";
 import api from "../../api";
 
 const store = useCellierStore();
 const route = useRoute();
 const router = useRouter();
+const afficherModale = ref(false);
+
+function ouvrirModale() {
+  afficherModale.value = true;
+}
 
 async function supprimerBouteille() {
   try {
@@ -34,6 +49,7 @@ async function supprimerBouteille() {
     // Après la suppression, réinitialiser la bouteille dans le store et rediriger vers la page du cellier
     store.bouteilleVin = null;
 
+    afficherModale.value = false;
     router.back();
 
     // Afficher un message d'erreur si la suppression a échoué
