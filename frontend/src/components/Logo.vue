@@ -1,6 +1,6 @@
 <template>
   <div class="logo">
-    <img src="../assets/img/logo.svg" alt="" />
+    <img src="../assets/img/logo3.svg" alt="logo" />
     <h1 class="logo-titre">Catalogue des vins</h1>
   </div>
 </template>

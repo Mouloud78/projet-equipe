@@ -6,7 +6,7 @@
     {{ messageSucces }}
   </div>
   <div v-else><Navbar /></div>
-  <div class="container container-plain">
+  <div class="container-plain">
     <form @submit.prevent="updateUsager" class="bloc-form">
       <div>
         <label>Nom :</label>
@@ -62,7 +62,7 @@ export default {
       try {
         const id = this.$route.params.id;
         const response = await axios.get(
-          `http://localhost:8000/api/usagers/${id}`
+          `http://localhost:8000/api/usagers/${id}`,
         );
 
         this.nom = response.data.data.nom;
