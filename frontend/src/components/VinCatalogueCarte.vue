@@ -11,7 +11,7 @@
     <div class="media">
       <div class="image-conteneur">
         <img :src="vin.image_url" class="image" :alt="vin.nom" />
-        <div class="prix">{{ vin.prix }}$</div>
+        <div class="prix">{{ prixFormate }}$</div>
       </div>
 
       <div class="contenu">
@@ -89,6 +89,11 @@ export default {
       const num = parseFloat(this.vin.alcohol);
       if (isNaN(num)) return this.vin.alcohol;
       return num.toFixed(2);
+    },
+
+  prixFormate() {
+    if (!this.vin.prix) return "0.00";
+      return Number(this.vin.prix).toFixed(2);
     },
   },
 
