@@ -135,10 +135,7 @@
             <Eye class="icons" />
           </button>
 
-          <button
-            class="btn btn-cellier"
-            @click="ajouterListeAchats(bouteille.id)"
-          >
+          <button class="btn btn-cellier" @click="ajouterListeAchats(bouteille.vin.id)">
             <ShoppingBasket class="icons" />
           </button>
 
@@ -374,11 +371,17 @@ export default {
     },
 
     async ajouterListeAchats(idVin) {
+
+      //Veut filtres les bouteilles, pour juste recuperer les bouteilles avec id concernees
+      const bouteillesConcernees = this.bouteilles.filter((b) => b.vin.id === idVin);
+
+      // Réinitialiser les messages
+      bouteillesConcernees.forEach((bouteille) => {
+        bouteille.messageAjout = null;
+        bouteille.messageErreur = null;
+      });
+
       try {
-        const bouteille = this.bouteilles.find((b) => b.id === idVin);
-        if (bouteille) {
-          bouteille.messageAjout = null;
-        }
 
         // Récupérer l'utilisateur connecté
         const authStore = useAuthStore();
@@ -395,24 +398,17 @@ export default {
         });
 
         // afficher un message de succès
-        if (bouteille) {
-          bouteille.messageAjout =
-            "Votre bouteille a été ajoutée a la liste d'achat avec succès !";
-          setTimeout(() => {
-            bouteille.messageAjout = null;
-          }, 2000);
-        }
-        // afficher message d'erreur
-      } catch (erreur) {
-        const bouteille = this.bouteilles.find((b) => b.id === idVin);
+        bouteillesConcernees.forEach((bouteille) => {
+          bouteille.messageAjout = "Bouteille ajoutée à la liste d'achat !";
+          setTimeout(() => { bouteille.messageAjout = null; }, 2000);
+        });
 
-        if (bouteille) {
-          bouteille.messageErreur =
-            "Cette bouteille est déjà dans votre liste d’achats";
-          setTimeout(() => {
-            bouteille.messageErreur = null;
-          }, 3000);
-        }
+      } catch (erreur) {
+        // afficher message d'erreur
+        bouteillesConcernees.forEach((bouteille) => {
+          bouteille.messageErreur = "Cette bouteille est déjà dans votre liste d'achat";
+          setTimeout(() => { bouteille.messageErreur = null; }, 3000);
+        });
       }
     },
   },
