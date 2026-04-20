@@ -20,8 +20,8 @@
 }
 
 .cellier-nom {
-  font-weight: 500;
-  margin-left: 15px;
+  font-weight: 600;
+  font-size: var(--fs-20);
 }
 
 .btn-cellier {
@@ -40,10 +40,9 @@
   border: none;
   margin-bottom: 5px;
 }
-.bouton-celleir {
+.bouton-cellier {
   display: flex;
-  /* flex-direction: column; */
-  gap: 5px;
+  flex-direction: column;
 }
 
 .cellier-lien-ajout-bouteille {

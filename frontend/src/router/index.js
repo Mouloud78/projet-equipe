@@ -13,7 +13,10 @@ import DetailCellier from "../pages/cellierVin/DetailCellier.vue";
 import AjouterBouteille from "../pages/bouteille/AjouterBouteille.vue";
 import AjouterBouteillePerso from "../pages/bouteille/AjouterBouteillePerso.vue";
 import RechercheBouteilleCellier from "../pages/cellier/RechercheBouteilleCellier.vue";
+import ListeAchats from "../pages/achats/ListeAchats.vue";
 import ModifierBouteillePerso from "../pages/bouteille/ModifierBouteillePerso.vue";
+import ListeAchatBouteille from "../pages/achats/ListeAchatBouteille.vue";
+
 const routes = [
   {
     path: "/",
@@ -82,11 +85,30 @@ const routes = [
     component: RechercheBouteilleCellier,
     meta: { requiresAuth: true },
   },
+
   {
     path: "/bouteille/ModifierBouteillePerso/:sku,:cellier_id",
     component: ModifierBouteillePerso,
     meta: { requiresAuth: true },
   },
+
+  {
+    path: "/bouteille/ModifierBouteillePerso/:sku",
+    component: ModifierBouteillePerso,
+    meta: { requiresAuth: true },
+  },
+
+  {
+    path: "/liste-achats",
+    component: ListeAchats,
+    meta: { requiresAuth: true },
+  },
+  {
+    path: "/liste-achats-vin/:id",
+    component: ListeAchatBouteille,
+    meta: { requiresAuth: true },
+  },
+
   // redirige les URL non reconnu (dans notre code) pour /connexion-usager
   {
     path: "/:pathMatch(.*)*",

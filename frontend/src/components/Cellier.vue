@@ -1,9 +1,9 @@
 <template>
   <div class="nom-cellier">
-    <div  class="cellier-item">
+    <div class="cellier-item">
       <div class="vin-cellier-carte">
         <img
-          src="../../public/bouteille.png"
+          src="../../public/cellier.svg"
           alt="bouteille"
           class="cellier-img"
         />
@@ -11,20 +11,20 @@
       </div>
     </div>
 
-    <div class="bouton-celleir">
-      <button
-        class="btn btn-cellier"
-        @click="$emit('ouvrir-modale', cellier.id)"
-      >
-        <Trash class="icons" />
+    <div class="bouton-cellier">
+      <button class="btn btn-cellier" @click="voirDetailVinCellier">
+        <Eye class="icons" />
       </button>
 
       <button class="btn btn-cellier" @click="modifierCellier">
         <PencilLine class="icons" />
       </button>
 
-      <button class="btn btn-cellier" @click="voirDetailVinCellier">
-        <Eye class="icons" />
+      <button
+        class="btn btn-cellier"
+        @click="$emit('ouvrir-modale', cellier.id)"
+      >
+        <Trash class="icons" />
       </button>
     </div>
   </div>

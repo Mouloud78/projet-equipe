@@ -43,12 +43,6 @@ class VinController extends Controller
             case 4:
                 $query = Vin::query()->orderBy('prix', 'desc');
                 break;
-            case 5:
-                $query = Vin::query()->orderBy('annee', 'asc');
-                break;
-            case 6:
-                $query = Vin::query()->orderBy('annee', 'desc');
-                break;
             default:
                 $query = Vin::query();
                 break;
@@ -140,6 +134,7 @@ class VinController extends Controller
             ->whereRaw('annee REGEXP "^[0-9]{4}$"');
 
         /**Faire les filtres  sur les bouteilles de la SAQ et 
+        /**Faire les filtres  sur les bouteilles de la SAQ et
          * exclure les bouteilles personnalisées
          */
         $toutLesFilters = [
@@ -375,7 +370,7 @@ class VinController extends Controller
             return response()->json(['message' => 'Bouteille non trouvée'], 404);
         }
         if (!str_starts_with($bouteilleVin->sku, 'PERSO-')) {
-            return response()->json(['message' => 'Bouteille alo de la SAQ ne doit pas être supprimée'], 400);
+            return response()->json(['message' => 'Bouteille de la SAQ ne doit pas être supprimée'], 400);
         }
 
         // Supprimer la bouteille de vin personnalisée

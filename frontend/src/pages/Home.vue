@@ -1,21 +1,9 @@
 <template>
   <Navbar />
   <div class="home">
-    <div class="banniere">
-      <h2 class="banniere-titre">Catalogue des vins</h2>
-    </div>
-    <div class="search-container">
-      <Search class="search-icon" />
-      <input
-        type="text"
-        v-model="termeDeRecherche"
-        placeholder="Rechercher une bouteille de vin par nom..."
-        @input="rechercherVins"
-        class="search-input"
-      />
-    </div>
+    <Logo />
     <div class="filtre">
-      <div class="btn-recherche catalogue">
+      <div class="btn-recherche catalogue mobile-only">
         <button class="btn btn-entete-cellier" @click="toggleFilter">
           <ListFilter class="icon" /><span>Filtrer </span>
         </button>
@@ -99,6 +87,31 @@
       @close="showTri = false"
     />
 
+    <div class="search-container">
+      <Search class="search-icon" />
+      <input
+        type="text"
+        v-model="termeDeRecherche"
+        placeholder="Rechercher une bouteille de vin par nom..."
+        @input="rechercherVins"
+        class="search-input"
+      />
+
+      <div class="search-actions desktop-only">
+        <button class="search-action-btn" @click="toggleFilter" title="Filtrer">
+          <ListFilter class="icon-small" />
+        </button>
+        <div class="divider-vertical"></div>
+        <button class="search-action-btn" @click="showTri = true" title="Trier">
+          <ArrowDownNarrowWide class="icon-small" />
+        </button>
+      </div>
+    </div>
+
+    <p class="catalogue-description">
+      Parcourez et ajouter vos vins à vos celliers !
+    </p>
+
     <WineGrid v-if="!loading" :vins="vins" />
 
     <Pagination
@@ -126,6 +139,7 @@ import FilterSelect from "../components/FiltreSelect.vue";
 import AnneeFiltreSelect from "../components/AnneeFiltreSelect.vue";
 import ColorFilter from "../components/ColorFilter.vue";
 import ModalTri from "../components/ModalTri.vue";
+import Logo from "../components/Logo.vue";
 
 export default {
   components: {
@@ -141,6 +155,7 @@ export default {
     FourchetteFiltre,
     FilterSelect,
     AnneeFiltreSelect,
+    Logo,
   },
 
   data() {
@@ -358,3 +373,99 @@ export default {
   },
 };
 </script>
+
+<style scoped>
+.home {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 20px;
+  min-height: 100vh;
+}
+
+.mobile-only {
+  display: flex;
+}
+
+.desktop-only {
+  display: none;
+}
+
+.search-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+  max-width: 700px;
+  margin: 1.5rem auto;
+}
+
+.search-input {
+  width: 100%;
+  padding: 12px 15px 12px 45px;
+  border-radius: 50px;
+  border: 1px solid #ddd;
+  font-size: 1rem;
+  outline: none;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+}
+
+.search-icon {
+  position: absolute;
+  left: 15px;
+  color: #888;
+  width: 20px;
+}
+
+@media (min-width: 1024px) {
+  .mobile-only {
+    display: none !important;
+  }
+
+  .desktop-only {
+    display: flex;
+    align-items: center;
+    position: absolute;
+    right: 15px;
+    gap: 10px;
+  }
+
+  .search-input {
+    padding-right: 100px;
+  }
+}
+
+.search-action-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #555;
+  display: flex;
+  align-items: center;
+  padding: 5px;
+  transition: color 0.2s;
+}
+
+.search-action-btn:hover {
+  color: #8b0000;
+}
+
+.icon-small {
+  width: 18px;
+  height: 18px;
+}
+
+.divider-vertical {
+  width: 1px;
+  height: 20px;
+  background-color: #ddd;
+}
+
+.catalogue-description {
+  text-align: center;
+  color: #666;
+  margin-bottom: 2rem;
+}
+
+.espacement {
+  height: 100px;
+}
+</style>

@@ -11,7 +11,7 @@
     <div class="media">
       <div class="image-conteneur">
         <img :src="vin.image_url" class="image" :alt="vin.nom" />
-        <div class="prix">{{ vin.prix }}$</div>
+        <div class="prix">{{ prixFormate }}$</div>
       </div>
 
       <div class="contenu">
@@ -24,13 +24,19 @@
             :style="{ backgroundColor: chercherCouleur(vin.couleur) }"
           ></span>
         </p>
-        <div>
+        <div class="catalogue-carte-actions">
           <router-link
             class="catalogue-carte-btn"
             :to="`/bouteille/AjouterBouteille/${vin.id}`"
           >
             Ajouter au cellier
           </router-link>
+          <button
+            class="liste-btn catalogue-carte-btn btn-achat"
+            @click="ajouterListeAchats"
+          >
+            <ShoppingBasket class="icons" />
+          </button>
         </div>
       </div>
     </div>
@@ -43,10 +49,6 @@
         <p>Millésime : {{ vin.annee }}</p>
       </div>
     </div>
-
-    <button class="liste-btn" @click="ajouterListeAchats">
-      <ShoppingBasket />
-    </button>
 
     <button class="info-btn" @click.stop="toggleInfo">
       {{ montrerInfo ? "↓" : "↑" }}
@@ -87,6 +89,11 @@ export default {
       const num = parseFloat(this.vin.alcohol);
       if (isNaN(num)) return this.vin.alcohol;
       return num.toFixed(2);
+    },
+
+  prixFormate() {
+    if (!this.vin.prix) return "0.00";
+      return Number(this.vin.prix).toFixed(2);
     },
   },
 
@@ -133,7 +140,6 @@ export default {
 
     async ajouterListeAchats() {
       try {
-
         this.message = "";
         this.messageSucces = "";
 
@@ -142,7 +148,7 @@ export default {
         await authStore.fetchUsager();
         const usagerId = authStore.usager.id;
 
-         // Récupérer l'id du vin
+        // Récupérer l'id du vin
         const vinId = this.vin.id;
 
         //appel api pour ajouter a la BD
@@ -157,16 +163,38 @@ export default {
         setTimeout(() => {
           this.messageSucces = "";
         }, 2000);
-
-      }
-      // afficher message d'erreur
-      catch (erreur) {
-        this.message = "La bouteille n'a pas pu etre ajouter a la liste d'achat, car elle en fait deja parti"
+      } catch (erreur) {
+        // afficher message d'erreur
+        this.message = "Cette bouteille est déjà dans votre liste d’achats";
         setTimeout(() => {
           this.message = "";
         }, 4000);
       }
-    }
+    },
   },
 };
 </script>
+<style scoped>
+@media (min-width: 1024px) {
+  .catalogue-carte {
+    border: 1px solid var(--gris-clair);
+    box-shadow: 0 2px 8px var(--noir-semi-transparent);
+    border-radius: 15px;
+    background: var(--blanc-clair);
+  }
+
+  .info-btn, 
+  .fixed-btn, 
+  .catalogue-carte-btn, 
+  .liste-btn {
+    border: 1px solid var(--gris-clair);
+    box-shadow: 0 1px 3px var(--noir-tres-transparent);
+  }
+
+  .catalogue-carte:hover {
+    border-color: var(--gris-semi-transparent);
+    box-shadow: 0 4px 12px var(--noir-semi-transparent);
+    transform: translateY(-2px);
+  }
+}  
+</style>

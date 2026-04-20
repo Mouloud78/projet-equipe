@@ -50,6 +50,12 @@
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
+
+  /* fix variable card heights on desktop */
+  line-height: 1.2;
+  min-height: 2.4em;
+  max-height: 2.4em;
+  display: -webkit-box;
 }
 
 .prix {
@@ -142,9 +148,10 @@
   padding: var(--espace-tres-petit) var(--espace-moyen-petit);
   z-index: 3;
   border: var(--espace-mini) solid black;
+  min-width: 50px;
 }
 
-.liste-btn {
+/* .liste-btn {
   position: absolute;
   bottom: var(--espace-gros-plus);
   right: var(--espace-gros-plus);
@@ -160,7 +167,7 @@
   padding: var(--espace-tres-petit) var(--espace-moyen-petit);
   z-index: 3;
   border: var(--espace-mini) solid black;
-}
+} */
 
 .info-btn span {
   font-size: var(--fs-12);
@@ -238,9 +245,10 @@
 }
 
 .catalogue-carte-btn {
+  flex: 1;
+  margin-top: 0;
   display: block;
   max-width: 100%;
-  margin-top: auto;
   background: var(--rouge-vin-profond);
   color: var(--blanc-fonce);
   border: var(--espace-mini) solid var(--noir-profond);
@@ -268,4 +276,34 @@
   cursor: pointer;
   font-weight: 500;
   transition: 0.2s;
+}
+.catalogue-carte-actions {
+  display: flex;
+  align-items: stretch;
+  gap: 8px;
+  margin-top: auto;
+}
+
+.liste-btn {
+  position: static;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 50px;
+  background: var(--rouge-vin-profond);
+  color: var(--blanc-clair);
+  border: var(--espace-mini) solid var(--noir-profond);
+  border-radius: var(--espace-moyen-mini);
+  cursor: pointer;
+  padding: 0;
+}
+
+.btn-achat {
+  max-width: fit-content;
+}
+
+.catalogue-description {
+  font-size: var(--fs-18);
+  color: var(--gris-fonce);
+  padding: 10px 0;
 }

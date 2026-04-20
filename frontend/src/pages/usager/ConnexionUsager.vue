@@ -1,15 +1,9 @@
 <template>
   <div class="container">
     <div class="bloc-img">
-      <img src="../../assets/img/image.png" />
-      <div class="bloc-img-secondaire">Vino</div>
+      <img src="../../assets/img/logo3.svg" />
     </div>
     <form class="bloc-form" @submit.prevent="connexion">
-      <h2>Connectez Vous</h2>
-      <p class="already-txt">
-        Pas de compte ?
-        <router-link to="/creation-usager"> S'inscrire </router-link>
-      </p>
       <div>
         <label for="courriel">Courriel</label>
         <input
@@ -34,6 +28,10 @@
         {{ loading ? "Connexion..." : "Se Connecter" }}
       </button>
       <p v-if="erreur" class="erreur">{{ erreur }}</p>
+      <p class="already-txt">
+        Pas de compte ?
+        <router-link to="/creation-usager"> S'inscrire </router-link>
+      </p>
     </form>
   </div>
 </template>

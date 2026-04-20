@@ -1,15 +1,12 @@
 <template>
   <div class="container">
     <div class="bloc-img">
-      <img src="../../assets/img/image.png" />
-      <div class="bloc-img-secondaire">Vino</div>
+      <img src="../../assets/img/logo3.svg" />
     </div>
     <form @submit.prevent="gererSoumission" class="bloc-form">
-      <h2>Créer un compte</h2>
-      <p class="already-txt">Déjà membre ?
-        <router-link to="/connexion-usager">
-          Se Connecter
-        </router-link>
+      <p class="already-txt">
+        Déjà membre ?
+        <router-link to="/connexion-usager"> Se Connecter </router-link>
       </p>
       <!-- Nom -->
       <div>
@@ -86,7 +83,6 @@ export default {
     },
     //Connecte l'usager quand il pese sur "creer un compte"
     async connexion() {
-
       try {
         // Récupération du token CSRF
         await fetchCsrfToken();

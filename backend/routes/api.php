@@ -75,7 +75,10 @@ Route::middleware(['web', 'auth'])->group(function () {
     Route::delete('/supprimer-bouteille/{bouteilleSKU}', [VinController::class, 'supprimerVinPersonnalise']);
 
     //Routes pour gerer la liste d'achats
+    Route::get('/liste-achats', [ListeAchatController::class, 'index']);
     Route::post('/ajouter-bouteille-liste', [ListeAchatController::class, 'store']);
+    Route::get('/liste-achats-vin/{id}', [ListeAchatController::class, 'show']);
+    Route::delete('/liste-achats/{id}', [ListeAchatController::class, 'destroy']);
 
     // Route pour récupérer les détails d'un vin à partir de son SKU
     Route::get('/vin/{sku}', [VinController::class, 'chercherVinPersonnalise']);

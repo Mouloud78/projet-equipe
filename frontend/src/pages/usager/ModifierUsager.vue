@@ -1,13 +1,12 @@
 <template>
+  <div class="banniere">
+    <h2 class="banniere-titre">Modifier vos données</h2>
+  </div>
   <div v-if="messageSucces" class="bloc-modale-succes">
     {{ messageSucces }}
   </div>
   <div v-else><Navbar /></div>
-  <div class="container">
-    <div class="bloc-img">
-      <img src="../../assets/img/image.png" />
-      <div class="bloc-img-secondaire">Vino</div>
-    </div>
+  <div class="container-plain">
     <form @submit.prevent="updateUsager" class="bloc-form">
       <div>
         <label>Nom :</label>
@@ -63,7 +62,7 @@ export default {
       try {
         const id = this.$route.params.id;
         const response = await axios.get(
-          `http://localhost:8000/api/usagers/${id}`
+          `http://localhost:8000/api/usagers/${id}`,
         );
 
         this.nom = response.data.data.nom;
@@ -97,6 +96,8 @@ export default {
           if (this.ancien_courriel !== this.courriel) {
             this.ancien_courriel = this.courriel;
             this.$router.push("/connexion-usager");
+          } else {
+            this.$router.push("/profil-usager");
           }
         }, 3000);
       } catch (erreur) {

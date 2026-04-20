@@ -17,10 +17,13 @@
 
   <div class="btn-recherche">
     <button class="btn btn-entete-cellier" @click="toggleFilter">
-      <ListFilter class="icon" /><span>Filtrer </span>
+      <ListFilter class="icon" />
+      <span>Filtrer</span>
     </button>
+
     <button class="btn btn-entete-cellier" @click="showTri = true">
-      <ArrowDownNarrowWide class="icon" /><span>Trier </span>
+      <ArrowDownNarrowWide class="icon" />
+      <span>Trier</span>
     </button>
   </div>
 
@@ -60,8 +63,8 @@
       />
 
       <FourchetteFiltre
-        :key="selected.reinitialiser"
         v-if="filters.prix"
+        :key="selected.reinitialiser"
         v-model="selected.prix"
         :minLimit="filters.prix.min"
         :maxLimit="filters.prix.max"
@@ -141,6 +144,21 @@
         <button @click="voirDetail(bouteille.id)" class="btn btn-cellier">
           <Eye />
         </button>
+
+        <button
+          class="btn btn-cellier"
+          @click="ajouterListeAchats(bouteille.id)"
+        >
+          <ShoppingBasket />
+        </button>
+      </div>
+
+      <div v-if="bouteille.messageAjout" class="bloc-modale-succes">
+        {{ bouteille.messageAjout }}
+      </div>
+
+      <div v-if="bouteille.messageErreur" class="erreur">
+        {{ bouteille.messageErreur }}
       </div>
     </div>
   </div>
@@ -153,6 +171,8 @@
     @confirm="confirmerSuppression"
     @cancel="afficherModale = false"
   />
+
+  <div class="espacement"></div>
 </template>
 
 <script>
@@ -170,6 +190,8 @@ import {
 import FourchetteFiltre from "../../components/Fourchette.vue";
 import FilterSelect from "../../components/FiltreSelect.vue";
 import AnneeFiltreSelect from "../../components/AnneeFiltreSelect.vue";
+import { ShoppingBasket } from "lucide-vue-next";
+import FilterSection from "../../components/FilterSelection.vue";
 import ColorFilter from "../../components/ColorFilter.vue";
 import ModalTri from "../../components/ModalTri.vue";
 import ModalConfirmation from "../../components/ModalConfirmation.vue";
@@ -193,6 +215,7 @@ export default {
     ColorFilter,
     ModalTri,
     ModalConfirmation,
+    ShoppingBasket,
   },
 
   data() {
@@ -227,6 +250,8 @@ export default {
 
       afficherModale: false,
       idASupprimer: null,
+      messageSucces: "",
+      message: "",
     };
   },
 
