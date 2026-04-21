@@ -25,9 +25,8 @@ class UsagerController extends Controller
     ];
 
     /**
-     * Récupération des usagers
-     *
-     * @return void
+     * Récupère des usagers.
+     * @return view
      */
     public function index()
     {
@@ -40,6 +39,8 @@ class UsagerController extends Controller
      * Enregistrement d'usager 
      * personnalisation des messages d'erreur
      * faire la validation des données formulaire
+     * @param Request $request
+     * @return json
      */
 
     public function store(Request $request)
@@ -123,7 +124,7 @@ class UsagerController extends Controller
     /**
      * Affiche les informations d’un usager spécifique.
      * @param int $id 
-     * @return JsonResponse 
+     * @return json 
      */
     public function show($id)
     {
@@ -141,14 +142,15 @@ class UsagerController extends Controller
         }
     }
 
-
-    // Supprimer le compte de l'usager connecté
+    /**
+     * Supprime le compte de l'usager connecté
+     * @param Request $request
+     * @return json
+     */
     public function supprimerUsager(Request $request)
     {
         $usager = $request->user();
-
         $usager->delete();
-
         return response()->json(['message' => 'Votre Compte est supprimé']);
     }
 }
