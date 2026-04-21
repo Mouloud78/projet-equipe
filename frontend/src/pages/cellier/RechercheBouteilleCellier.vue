@@ -138,12 +138,9 @@
           <Eye />
         </button>
 
-        <button
-          class="btn btn-cellier"
-          @click="ajouterListeAchats(bouteille.id)"
-        >
-          <ShoppingBasket />
-        </button>
+          <button class="btn btn-cellier" @click="ajouterListeAchats(bouteille.vin.id)">
+            <ShoppingBasket class="icons" />
+          </button>
 
         <button @click="ouvrirModale(bouteille.id)" class="btn btn-cellier">
           <Trash />
@@ -392,8 +389,50 @@ export default {
     voirDetail(id) {
       this.$router.push(`/cellier-vin/${id}`);
     },
-    // fonction pour ajouter une bouteille à la liste de courses
-    reinitialiserFiltres() {
+
+    async ajouterListeAchats(idVin) {
+
+      //Veut filtres les bouteilles, pour juste recuperer les bouteilles avec id concernees
+      const bouteillesConcernees = this.bouteilles.filter((b) => b.vin.id === idVin);
+
+      // Réinitialiser les messages
+      bouteillesConcernees.forEach((bouteille) => {
+        bouteille.messageAjout = null;
+        bouteille.messageErreur = null;
+      });
+
+      try {
+
+        // Récupérer l'utilisateur connecté
+        const authStore = useAuthStore();
+        await authStore.fetchUsager();
+        const usagerId = authStore.usager.id;
+
+        // Récupérer l'id du vin
+        const vinId = idVin;
+
+        //appel api pour ajouter a la BD
+        const response = await api.post("/ajouter-bouteille-liste", {
+          usager_id: usagerId,
+          vin_id: vinId,
+        });
+
+        // afficher un message de succès
+        bouteillesConcernees.forEach((bouteille) => {
+          bouteille.messageAjout = "Bouteille ajoutée à la liste d'achat !";
+          setTimeout(() => { bouteille.messageAjout = null; }, 2000);
+        });
+
+      } catch (erreur) {
+        // afficher message d'erreur
+        bouteillesConcernees.forEach((bouteille) => {
+          bouteille.messageErreur = "Cette bouteille est déjà dans votre liste d'achat";
+          setTimeout(() => { bouteille.messageErreur = null; }, 3000);
+        });
+      }
+    },
+     // fonction pour ajouter une bouteille à la liste de courses
+     reinitialiserFiltres() {
       this.selected = {
         countries: [],
         regions: [],
@@ -410,7 +449,7 @@ export default {
       this.fetchBouteilles();
     },
   },
-  // lancer la recherche initiale au chargement de la page
+
   mounted() {
     this.fetchBouteilles();
   },
