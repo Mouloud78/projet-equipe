@@ -70,6 +70,7 @@ export default {
     quantite: Number,
     id: Number,
   },
+  emits: ["ouvrir-modale", "update-quantite"],
   data() {
     return {
       erreur: "",

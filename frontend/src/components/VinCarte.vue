@@ -54,6 +54,8 @@ export default {
     cellierNom: String,
   },
 
+  emits: ["supprimer-bouteille", "modifier-bouteille"],
+
   methods: {
     // Formate le prix en utilisant la locale canadienne et la devise CAD
     formatPrice(prix) {

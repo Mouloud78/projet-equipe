@@ -63,7 +63,7 @@ export default {
       try {
         const id = this.$route.params.id;
         const response = await axios.get(
-          `http://localhost:8000/api/usagers/${id}`
+          `http://localhost:8000/api/usagers/${id}`,
         );
 
         this.nom = response.data.data.nom;
@@ -106,36 +106,3 @@ export default {
   },
 };
 </script>
-<style scoped>
-@media (min-width: 1024px) {
-  .banniere {
-    text-align: center;
-    margin-bottom: 2rem;
-  }
-
-  .container-plain {
-    max-width: 550px;
-    margin: 4rem auto;
-    padding: 0 1.5rem;
-  }
-
-  .bloc-form {
-    width: 100%;
-    margin: 0 auto;
-    display: flex;
-    flex-direction: column;
-  }
-
-  .bloc-form input {
-    width: 100%;
-    box-sizing: border-box;
-  }
-
-  .signup-btn {
-    width: 100%;
-    max-width: 280px;
-    margin: 2rem auto !important;
-    display: block;
-  }
-}
-</style>
