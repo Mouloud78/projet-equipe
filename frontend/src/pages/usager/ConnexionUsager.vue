@@ -124,6 +124,8 @@ export default {
   }
 };
 </script>
+<<<<<<< HEAD
+=======
 <style scoped>
 @media (min-width: 1024px) {
   .container {
@@ -167,3 +169,4 @@ export default {
   }
 }
 </style>
+>>>>>>> refs/remotes/origin/main
