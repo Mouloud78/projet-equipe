@@ -10,7 +10,7 @@
       <h1 class="profil-titre">Ajouter la bouteille au cellier</h1>
       <label>Nom du cellier </label>
       <!-- Affichage d'un menu déroulant pour sélectionner le cellier où ajouter la bouteille -->
-      <select class="form-input" v-model="cellier_id">
+      <select v-model="cellier_id" aria-label="Choisir un cellier">
         <option disabled value="">Choisir un cellier</option>
         <option
           v-for="cellier in celliers"
@@ -35,6 +35,7 @@
         @input="corrigerValeur"
         placeholder="0"
       />
+      <input type="number" v-model.number="quantite" placeholder="0" />
       <div v-if="erreurs.quantite" class="erreur">
         {{ erreurs.quantite[0] }}
       </div>
@@ -104,6 +105,10 @@ export default {
         );
 
         this.$router.push("/catalogue");
+          "bloc-modale-succes",
+        );
+
+        this.$router.back();
       } catch (erreur) {
         if (erreur.response.data.errors) {
           this.erreurs = erreur.response.data.errors;
@@ -111,11 +116,12 @@ export default {
           if (erreur.response.data.message) {
             this.message = erreur.response.data.message;
 
-            //envoy une notification d'erreurs au catalogue, une fois qu'on y retourne
+            //envoyer une notification d'erreurs a la page precedante, une fois qu'on y retourne
             const notif = useNotifStore();
             notif.montreMessage(this.message, "erreur");
 
             this.$router.push("/catalogue");
+            this.$router.back();
           }
         }
       }

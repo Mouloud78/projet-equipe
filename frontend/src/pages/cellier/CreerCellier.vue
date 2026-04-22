@@ -3,10 +3,15 @@
   <!-- Formulaire de création de cellier -->
   <div>
     <form @submit.prevent="creerCellier" class="bloc-form">
-      <h2 class="profil-titre">Création de cellier</h2>
+      <h1 class="profil-titre">Création de cellier</h1>
       <div>
-        <label>Choisir un nom</label>
-        <input type="text" v-model="nom" placeholder="Votre nom de cellier" />
+        <label for="nom-cellier">Choisir un nom</label>
+        <input
+          id="nom-cellier"
+          type="text"
+          v-model="nom"
+          placeholder="Votre nom de cellier"
+        />
         <div v-if="erreurs.nom" class="erreur">
           {{ erreurs.nom[0] }}
         </div>
@@ -50,7 +55,6 @@ export default {
 
     // créer un cellier pour l'usager connecté
     async creerCellier() {
-
       // si l'usager est pas connecter, retour a la page de connexion
       const authStore = useAuthStore();
       if (!authStore.usager) {
@@ -75,16 +79,29 @@ export default {
         //catch les erreurs
         //si l'usager n'est pas connecter
         if (erreur.response && erreur.response.status === 401) {
-          this.erreurConnexion = "Vous devez être connecté pour créer un cellier";
+          this.erreurConnexion =
+            "Vous devez être connecté pour créer un cellier";
           setTimeout(() => {
             this.$router.push("/connexion-usager");
           }, 3000);
         }
         //renvoye les erreurs venu du backend
-        else if(erreur.response && erreur.response.data && erreur.response.data.errors){
+        //si il y a des erreurs de validation
+        else if (
+          erreur.response &&
+          erreur.response.data &&
+          erreur.response.data.errors
+        ) {
           this.erreurs = erreur.response.data.errors;
-        }
-        else {
+          //si il y a des erreurs de connexion ou cretion de cellier avec un nom deja existant
+        } else if (
+          erreur.response &&
+          erreur.response.data &&
+          erreur.response.data.message
+        ) {
+          this.erreurConnexion = erreur.response.data.message;
+          //si il y a des erreurs de connexion ou autre sans message
+        } else {
           this.erreurConnexion = "Une erreur est survenue";
         }
       }

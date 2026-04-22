@@ -43,6 +43,7 @@
 .bouton-cellier {
   display: flex;
   flex-direction: column;
+  padding-left: 10px;
 }
 
 .cellier-lien-ajout-bouteille {
@@ -54,6 +55,7 @@
   text-decoration: none;
   color: var(--rouge-vin-profond);
   font-weight: 700;
+  font-size: 16px;
 }
 
 .cellier-icone-ajout-bouteille {

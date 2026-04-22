@@ -6,7 +6,12 @@
     </div>
 
     <div v-show="open" class="select-box">
-      <select v-model="selectedItem" @change="ajouterSelection" class="select">
+      <select
+        v-model="selectedItem"
+        @change="ajouterSelection"
+        class="select"
+        aria-label="Sélectionner un filtre"
+      >
         <option disabled value="">Sélectionner...</option>
         <option v-for="item in selectionsDisponible" :key="item" :value="item">
           {{ item }}
@@ -44,13 +49,14 @@ export default {
   data() {
     return {
       open: false,
-      localValue: this.modelValue ?? [],
+      localValue: [],
       selectedItem: "",
     };
   },
 
   computed: {
     selectionsDisponible() {
+      if (!Array.isArray(this.items)) return [];
       return this.items.filter((i) => !this.localValue.includes(i));
     },
   },
@@ -60,7 +66,7 @@ export default {
       immediate: true,
       deep: true,
       handler(val) {
-        this.localValue = val ? [...val] : [];
+        this.localValue = Array.isArray(val) ? [...val] : [];
       },
     },
   },

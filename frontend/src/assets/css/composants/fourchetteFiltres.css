@@ -15,9 +15,10 @@
 .values {
   display: flex;
   justify-content: space-between;
-  font-size: 0.1rem;
+  /* font-size: 0.1rem; */
   color: #ddd;
   padding: 0 5px;
+  display: none;
 }
 
 .app-filtre {
@@ -33,4 +34,22 @@
   font-weight: 600;
   cursor: pointer;
   transition: all 0.2s ease;
+}
+
+.custom-tooltips {
+  position: relative;
+}
+
+.tooltip-min {
+  position: absolute;
+  top: -50px;
+  left: 0;
+  font-weight: 600;
+}
+
+.tooltip-max {
+  position: absolute;
+  bottom: -10px;
+  right: 0;
+  font-weight: 600;
 }

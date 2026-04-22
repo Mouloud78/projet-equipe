@@ -11,7 +11,7 @@ body {
   /* Couleurs*/
   --gris-clair: #efefef;
   --gris-fonce: #333;
-  --gris-clair: #ccc;
+  --gris-clair-3: #ccc;
   --gris-semi-transparent: rgba(255, 255, 255, 0.4);
   --gris-rose-clair: rgb(243, 239, 239);
   --gris-moyen: #999;
@@ -43,7 +43,8 @@ body {
   --rose-pale: rgb(246, 226, 226);
 
   /* Tailles de police et d'espacement en REM */
-  --fs-12: 0.75rem;
+  /* --fs-12: 0.75rem; */
+  --fs-12: 0.875rem;
   --fs-14: 0.875rem;
   --fs-16: 1rem;
   --fs-18: 1.125rem;
@@ -75,4 +76,8 @@ body {
   --espace-gros: 50px;
   --espace-gros-plus: 70px;
   --espace-enorme: 80px;
+}
+
+input {
+  font-size: 16px !important;
 }

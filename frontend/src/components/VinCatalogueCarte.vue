@@ -11,7 +11,11 @@
   <div class="catalogue-carte">
     <div class="media">
       <div class="image-conteneur">
-        <img :src="vin.image_url" class="image" :alt="vin.nom" />
+        <img
+          :src="vin.image_url"
+          class="image"
+          :alt="'Le nom du vin est : ' + vin.nom"
+        />
         <div class="prix">{{ prixFormate }}$</div>
       </div>
 
@@ -37,6 +41,7 @@
           <button
             class="liste-btn catalogue-carte-btn btn-achat"
             @click="ajouterListeAchats"
+            aria-label="Ajouter à la liste d'achats"
           >
             <ShoppingBasket class="icons" />
           </button>
@@ -51,6 +56,7 @@
         <p>Alcool : {{ Number(vin.degre_alcool).toFixed(1) }} %</p>
         <p>Sucre : {{ vin.taux_sucre }}</p>
         <p>Millésime : {{ vin.annee }}</p>
+        <p>Format (ml) : {{ vin.format }}</p>
       </div>
     </div>
     <!-- Bouton pour basculer l'affichage des informations supplémentaires -->
@@ -115,6 +121,8 @@ export default {
       if (c.includes("orange")) return "#e67e22";
       if (c.includes("ambré(e)") || c.includes("ambre")) return "#FFBF00";
       if (c.includes("doré(e)") || c.includes("dore")) return "#FFD700";
+      if (c.includes("brun(e)") || c.includes("brune")) return "#964B00";
+      if (c.includes("roux") || c.includes("rousse")) return "#F7D094";
 
       return "#999";
     },

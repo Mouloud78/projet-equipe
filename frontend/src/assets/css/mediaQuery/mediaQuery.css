@@ -1,10 +1,4 @@
-@import url("../base/base.css");
-
 @media (max-width: 3000px) {
-  .alignement {
-    margin-top: var(--espace-gros-neg);
-  }
-
   body {
     margin-inline: var(--fs-20);
   }
@@ -45,6 +39,7 @@
     flex-direction: column;
     margin-top: var(--espace-gros);
     gap: var(--espace-moyen-neg);
+    max-width: 35ch;
   }
 
   .info-media p {
@@ -62,10 +57,6 @@
 }
 
 @media (max-width: 595px) {
-  .espacement {
-    padding-bottom: var(--espace-gros-plus);
-  }
-
   .navbar {
     position: sticky;
   }
@@ -138,10 +129,7 @@
     flex-direction: column;
     margin-top: var(--espace-gros);
     gap: var(--espace-moyen-neg);
-  }
-
-  .alignement {
-    margin-top: var(--espace-gros-neg);
+    max-width: 35ch;
   }
 
   .btn.fixed-btn {
@@ -193,10 +181,7 @@
   }
 
   .catalogue-carte {
-    /* max-width: 250px; */
-    /* margin: auto; */
     min-width: 250px;
-    /* max-height: 135px; */
   }
 
   .nom {
@@ -208,10 +193,7 @@
     flex-direction: column;
     margin-top: 45px;
     gap: var(--espace-moyen-neg);
-  }
-
-  .alignement {
-    margin-top: var(--espace-gros-neg);
+    max-width: 35ch;
   }
 
   .couleur {
@@ -293,7 +275,7 @@
   }
 
   .image-conteneur {
-    width: 55px;
+    width: 65px;
   }
 }
 
