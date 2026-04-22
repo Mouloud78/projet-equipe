@@ -365,9 +365,6 @@ export default {
         this.bouteilles = res.data.data || [];
         // mettre à jour les options de filtres disponibles en fonction des résultats de la recherche
 
-        console.log("selected.format:", this.selected.format);
-        console.log("filters.format envoyés:", filters.format);
-        console.log("formats dispo:", this.filters.format);
         if (res.data.filters) {
           this.filters = {
             countries: res.data.filters.countries || [],
