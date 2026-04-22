@@ -3,6 +3,11 @@
 
   <div class="home">
     <Logo />
+    <!-- Affiche une notification -->
+    <div v-if="notifStore.message" :class="['notif', notifStore.type]">
+      {{ notifStore.message }}
+    </div>
+
     <!-- Filtres -->
     <div class="filtre">
       <div class="btn-recherche catalogue mobile-only">
@@ -96,6 +101,7 @@
         type="text"
         v-model="termeDeRecherche"
         placeholder="Rechercher une bouteille de vin par nom..."
+        aria-label="Rechercher un vin"
         @input="rechercherVins"
         class="search-input"
       />
@@ -114,11 +120,6 @@
     <p class="catalogue-description">
       Parcourez et ajouter vos vins à vos celliers !
     </p>
-
-    <!-- Affiche une notification -->
-    <div v-if="notifStore.message" :class="['notif', notifStore.type]">
-      {{ notifStore.message }}
-    </div>
 
     <WineGrid v-if="!loading" :vins="vins" />
     <!-- Pagination du catalogue -->

@@ -42,6 +42,12 @@ class CellierController extends Controller
             ]
         );
 
+        if (Cellier::where('usager_id', $request->user()->id)->where('nom', $request->nom)->exists()) {
+            return response()->json([
+                'message' => 'Vous avez déjà un cellier avec ce nom.'
+            ], 400);
+        }
+
         // Création du cellier associé à l'usager connecté
         $cellier = Cellier::create([
             'nom' => $request->nom,
